@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import org.hl7.fhir.instance.model.Questionnaire;
 import org.hl7.fhir.instance.model.QuestionnaireResponse;
 import org.hl7.fhir.instance.model.ValueSet;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.instance.utils.IWorkerContext;
 import org.hl7.fhir.instance.utils.WorkerContext;
 import org.hl7.fhir.instance.validation.QuestionnaireResponseValidator;
 import org.hl7.fhir.utilities.validation.ValidationMessage;
@@ -87,10 +89,14 @@ public class FhirQuestionnaireResponseValidator extends BaseValidatorBridge impl
       return retVal;
     }
 
-    QuestionnaireResponseValidator val = new QuestionnaireResponseValidator(workerCtx);
+    QuestionnaireResponseValidator val = new QuestionnaireResponseValidator((IWorkerContext) workerCtx);
 
-    val.validate(retVal, theResource);
-    return retVal;
+	  try {
+		  val.validate(retVal, theResource);
+	  } catch (Exception theE) {
+		  throw new InternalErrorException(theE);
+	  }
+	  return retVal;
   }
 
   private boolean loadReferences(IBaseResource theResource, WorkerContext theWorkerCtx, IValidationContext<?> theValCtx,

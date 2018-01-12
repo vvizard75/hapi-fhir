@@ -139,7 +139,6 @@ public class FhirResourceDaoR4SearchFtTest extends BaseJpaR4Test {
 
 		Media med = new Media();
 		med.getSubject().setReferenceElement(ptId);
-		med.getSubtype().setText("Systolic Blood Pressure");
 		med.getContent().setContentType("LCws");
 		med.getContent().setDataElement(new Base64BinaryType(new byte[] {44,44,44,44,44,44,44,44}));
 		med.getContent().setTitle("bbbb syst");
